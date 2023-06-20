@@ -8,10 +8,20 @@ from datetime import datetime
 
 class BaseModel(sa.Model):
     """BaseModel object"""
-    id = sa.Column(sa.Integer, primary_key=True)
+    id = sa.Column(sa.Integer,
+                   sa.Identity(
+                       always=True,
+                       start=1,
+                       increment=1,
+                       nomaxvalue=True),
+                   primary_key=True)
     created_at = sa.Column(sa.DateTime, default=datetime.now())
     updated_at = sa.Column(sa.DateTime, default=datetime.now())
-    status = sa.Column(sa.Enum("Available", "NotAvailable"))
+    status = sa.Column(
+        sa.Enum(
+            "Available",
+            "NotAvailable"),
+        default="Available")
 
     def __init__(self, *args, **kwargs):
         """Instantiates new base model instances"""
@@ -32,9 +42,10 @@ class BaseModel(sa.Model):
         sa.session.commit()
 
     # TODO - get dictionary object
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Returns dictionary representation of the object"""
-        my_dict = self.__dict__
+        my_dict: dict = self.__dict__
+        del my_dict['_sa_instance_state']
         return my_dict
 
     # TODO - get object count
