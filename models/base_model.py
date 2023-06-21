@@ -2,23 +2,30 @@
 
 """ Module for Base Class Definition """
 
-from app import sa
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Identity, Enum, Integer, DateTime
 from datetime import datetime
+
+sa: SQLAlchemy = SQLAlchemy()
 
 
 class BaseModel(sa.Model):
     """BaseModel object"""
-    id = sa.Column(sa.Integer,
-                   sa.Identity(
-                       always=True,
-                       start=1,
-                       increment=1,
-                       nomaxvalue=True),
-                   primary_key=True)
-    created_at = sa.Column(sa.DateTime, default=datetime.now())
-    updated_at = sa.Column(sa.DateTime, default=datetime.now())
-    status = sa.Column(
-        sa.Enum(
+    __abstract__ = True
+    id = Column(Integer,
+                Identity(
+                    always=True,
+                    start=1,
+                    increment=1,
+                    nomaxvalue=True),
+                primary_key=True)
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(
+        DateTime,
+        default=datetime.now(),
+        onupdate=datetime.now())
+    status = Column(
+        Enum(
             "Available",
             "NotAvailable"),
         default="Available")
