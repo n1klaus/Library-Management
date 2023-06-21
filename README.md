@@ -3,12 +3,12 @@ A local library is in dire need of a web application to ease their work. The lib
 
 # Steps
 1. Models
-    - Book object
-    - Book Genre/Category object
-    - Library object
-    - User object
-    - Librarian object
-    - Member object
+    - Book object ✔
+    - Book Category object ✔
+    - User object ✔
+    - Account object ✔
+    - Librarian object ✔
+    - Member object ✔
 2. Views / Routes
     - GET books
     - GET books/genres
