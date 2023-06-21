@@ -8,5 +8,5 @@ from api.v1.views import app_views
 @app_views.route('/books', methods=['GET'], strict_slashes=False)
 def books():
     """Returns books page"""
-    b = Book()
-    return jsonify(str(b))
+    books = Book.query.all()
+    return jsonify(books)
