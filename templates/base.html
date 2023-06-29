@@ -4,12 +4,42 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../static/css/tailwind.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="../static/js/actions.js"></script>
         {% block head %}{% endblock %}
     </head>
     <body dir="ltr">
-        {% block body %}{% endblock %}
-        <script src="" async defer></script>
+        <header class="sticky top-0 bg-gray-400 p-5">
+            <div class="flex">
+                <p>Library Management</p>
+                <input type="text" id="search-bar" class="w-3/4 border border-gray-300 rounded-md" placeholder="Search...">
+                <div class="my-4">
+                    <select id="filter-dropdown" class="p-2 border border-gray-300 rounded-md">
+                        <option value="" selected>All</option>
+                        <option value="fiction">Fiction</option>
+                        <option value="non-fiction">Non-Fiction</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+        <div class="flex min-h-screen">
+            <div class="w-1/4 bg-blue-300 p-4">
+                <ul class="p-4">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/help">Help</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                </ul>
+            </div>
+            <div class="w-3/4 container mx-4 my-4">
+                
+                <div>
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        <!-- <script src="" async defer></script> -->
+        <footer class="sticky bottom-0 bg-gray-400 p-5">Copyright 2023</footer>
     </body>
 </html>
