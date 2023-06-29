@@ -4,6 +4,8 @@
 
 from models.base_model import BaseModel, sa
 from sqlalchemy import Column, String, ForeignKey, Integer, Identity
+from sqlalchemy.orm import validates
+import re
 
 
 class User(BaseModel):
@@ -16,12 +18,21 @@ class User(BaseModel):
                          increment=1,
                          nomaxvalue=True),
                      primary_key=True)
-    first_name = Column(String(60), nullable=True)
-    last_name = Column(String(60), nullable=True)
+    first_name = Column(String(60))
+    last_name = Column(String(60))
     email = Column(String(60), nullable=False, unique=True)
     password = Column(String(60), nullable=False)
     account_id = Column(Integer,
                         ForeignKey('accounts.account_id', onupdate='cascade', ondelete='cascade'))
+
+    @validates('email')
+    def validate_email(self, key, address):
+        """Validate that the email is valid """
+        if re.fullmatch(
+            r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}', address)\
+                is None:
+            raise ValueError("{0} is an invalid email".format(address))
+        return address
 
     def __init__(self, *args, **kwargs):
         """Instantiates new user instances"""
@@ -29,6 +40,8 @@ class User(BaseModel):
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
-    # TODO - update user settings
+    # TODO - login
 
-    # TODO delete user
+    # TODO - logout
+
+    # TODO - reset password

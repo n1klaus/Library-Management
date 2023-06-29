@@ -16,7 +16,6 @@ class Account(BaseModel):
                             increment=1,
                             nomaxvalue=True),
                         primary_key=True)
-    account_total = Column(Numeric(scale=2))
     account_balance = Column(Numeric(scale=2))
     account_status = Column(
         Enum(
@@ -32,6 +31,11 @@ class Account(BaseModel):
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
-    # TODO - update account settings
-
-    # TODO delete account
+    def deduct_book_fee(self, fee: float):
+        """Charges the member with the book fee to authorize payment for book rent"""
+        if self.account_status == 'Available':
+            self.account_balance -= fee
+            if self.account_balance <= -500:
+                raise Exception(
+                    'Cannot have outstanding debt of more than KSH.500')
+            self.save()

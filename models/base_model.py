@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-""" Module for Base Class Definition """
+""" Module for Base Class Model Definition """
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Identity, Enum, Integer, DateTime
@@ -36,26 +36,29 @@ class BaseModel(sa.Model):
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
-    # TODO - save object
     def save(self):
         """Saves object to database"""
         sa.session.add(self)
         sa.session.commit()
 
-    # TODO - delete object
     def delete(self):
         """Deletes object from database"""
         sa.session.delete(self)
         sa.session.commit()
 
-    # TODO - get dictionary object
+    def update(self, **kwargs):
+        """Update object details"""
+        if kwargs:
+            for key_attr, val_attr in kwargs.items():
+                setattr(self, key_attr, val_attr)
+            self.save()
+
     def to_dict(self) -> dict:
         """Returns dictionary representation of the object"""
-        my_dict: dict = self.__dict__
+        my_dict: dict = self.__dict__.copy()
         del my_dict['_sa_instance_state']
         return my_dict
 
-    # TODO - get object count
     def count(self):
         """Returns object count in database"""
         sa.session.count(self)
