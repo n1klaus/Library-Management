@@ -2,3 +2,4 @@
 STATE.md
 __pycache__/
 instance/
+node_modules/
