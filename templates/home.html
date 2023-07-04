@@ -5,10 +5,17 @@
 {% endblock %}
 
 {% block body %}
-    <div class="p-4 bg-teal-500">
+    <div id='home' class="p-4">
         <h1>Books</h1>
         
-        <div id="search-results" class="container">
+        <!-- Content Section -->
+        <div class="flex justify-end mb-4">
+            <button id="addButton" class="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 focus:outline-none mr-2">Add Book</button>
+            <button id="updateButton" class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 focus:outline-none">Update Book</button>
+            <button id="deleteButton" class="bg-red-500 hover:bg-red-600 text-white rounded-md px-4 py-2 focus:outline-none mr-2">Delete Book</button>
+        </div>
+
+        <div id="search-results" class="container bg-gray-100 p-4">
             <!-- Search results will be dynamically rendered here -->
             <p>No results!</p>
         </div>
