@@ -1,23 +1,17 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block head %}
-    <title>Home Page</title>
-{% endblock %}
-
-{% block body %}
-    <div id='home' class="p-4">
-        <h1>Books</h1>
-        
-        <!-- Content Section -->
-        <div class="flex justify-end mb-4">
-            <button id="addButton" class="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 focus:outline-none mr-2">Add Book</button>
-            <button id="updateButton" class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 focus:outline-none">Update Book</button>
-            <button id="deleteButton" class="bg-red-500 hover:bg-red-600 text-white rounded-md px-4 py-2 focus:outline-none mr-2">Delete Book</button>
+{% block content %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {% for book in books %}
+        <div class="relative">
+            <a href="{{ book.url }}" target="_blank">
+                <img src="{{ book.image_url }}" alt="{{ book.title }}" class="w-full">
+            </a>
+            <div class="bg-gray-900 bg-opacity-50 absolute bottom-0 left-0 right-0 px-4 py-2 text-gray-100 opacity-0 transition-opacity duration-300">
+                <h3 class="text-lg font-semibold">{{ book.title }}</h3>
+                <p class="text-sm">{{ book.author }}</p>
+            </div>
         </div>
-
-        <div id="search-results" class="container bg-gray-100 p-4">
-            <!-- Search results will be dynamically rendered here -->
-            <p>No results!</p>
-        </div>
+        {% endfor %}
     </div>
 {% endblock %}
