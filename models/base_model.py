@@ -3,8 +3,8 @@
 """ Module for Base Class Model Definition """
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Identity, Enum, Integer, DateTime
 from datetime import datetime
+
 
 sa: SQLAlchemy = SQLAlchemy()
 
@@ -12,20 +12,13 @@ sa: SQLAlchemy = SQLAlchemy()
 class BaseModel(sa.Model):
     """BaseModel object"""
     __abstract__ = True
-    id = Column(Integer,
-                Identity(
-                    always=True,
-                    start=1,
-                    increment=1,
-                    nomaxvalue=True),
-                primary_key=True)
-    created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(
-        DateTime,
+    created_at = sa.Column(sa.DateTime, default=datetime.now())
+    updated_at = sa.Column(
+        sa.DateTime,
         default=datetime.now(),
         onupdate=datetime.now())
-    status = Column(
-        Enum(
+    status = sa.Column(
+        sa.Enum(
             "Available",
             "NotAvailable"),
         default="Available")
@@ -34,7 +27,8 @@ class BaseModel(sa.Model):
         """Instantiates new base model instances"""
         if kwargs:
             for key, value in kwargs.items():
-                setattr(self, key, value)
+                if key not in self.__dict__:
+                    setattr(self, key, value)
 
     def save(self):
         """Saves object to database"""
@@ -55,8 +49,11 @@ class BaseModel(sa.Model):
 
     def to_dict(self) -> dict:
         """Returns dictionary representation of the object"""
-        my_dict: dict = self.__dict__.copy()
-        del my_dict['_sa_instance_state']
+        my_dict: dict = dict(sorted(self.__dict__.items()))
+        if '_sa_instance_state' in my_dict:
+            del my_dict['_sa_instance_state']
+        if 'password' in my_dict:
+            del my_dict['password']
         return my_dict
 
     def count(self):
@@ -65,4 +62,4 @@ class BaseModel(sa.Model):
 
     def __repr__(self):
         """Returns the canonical representation of the object"""
-        return f"[{self.id}] => {self.to_dict()}"
+        return f"{self.to_dict()}"

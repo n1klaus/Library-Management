@@ -3,51 +3,50 @@
 """ Module for Book Class Model Definition """
 
 from models.base_model import BaseModel, sa
-from sqlalchemy import Column, Numeric, String, Integer, Identity, ForeignKey, DateTime, Enum
 from datetime import datetime, timedelta
 
 
 class Book(BaseModel):
     """Book object"""
     __tablename__ = "books"
-    book_id = Column(Integer,
-                     Identity(
-                         always=True,
-                         start=1,
-                         increment=1,
-                         nomaxvalue=True),
-                     primary_key=True)
-    book_title = Column(String(256), nullable=False)
-    book_author = Column(String(256), nullable=False)
-    book_isbn = Column(Integer, nullable=False, unique=True)
-    book_fee = Column(Numeric(scale=2), nullable=False)
-    book_rent_start_date = Column(DateTime)
-    book_rent_end_date = Column(DateTime)
-    book_is_rented_to = Column(Integer,
-                               ForeignKey('members.member_id', onupdate='cascade', ondelete='cascade'))
-    book_rent_authorized_by = Column(Integer,
-                                     ForeignKey('librarians.librarian_id', onupdate='cascade', ondelete='cascade'))
-    book_category = Column(Integer,
-                           ForeignKey('book_categories.book_category_id', onupdate='cascade', ondelete='cascade'))
-    book_condition = Column(
-        Enum(
+    book_id = sa.Column(sa.Integer, primary_key=True)
+    book_title = sa.Column(sa.String(256), nullable=False)
+    book_author = sa.Column(sa.String(256), nullable=False)
+    book_isbn = sa.Column(sa.Integer, nullable=False, unique=True)
+    book_fee = sa.Column(sa.Numeric(scale=2))
+    book_rent_start_date = sa.Column(sa.DateTime)
+    book_rent_end_date = sa.Column(sa.DateTime)
+    book_is_rented_to = sa.Column(sa.Integer,
+                                  sa.ForeignKey('members.member_id',
+                                                onupdate='NO ACTION',
+                                                ondelete='SET NULL'))
+    book_rent_authorized_by = sa.Column(sa.Integer,
+                                        sa.ForeignKey('librarians.librarian_id',
+                                                      onupdate='NO ACTION',
+                                                      ondelete='SET NULL'))
+    book_category = sa.Column(sa.Integer,
+                              sa.ForeignKey('book_categories.book_category_id',
+                                            onupdate='NO ACTION',
+                                            ondelete='SET NULL'))
+    book_condition = sa.Column(
+        sa.Enum(
             "Perfect",
             "Fair",
             "Poor",
             "NotRated",
             "NotRentable"),
         default="Perfect")
-    book_rent_status = Column(
-        Enum(
+    book_rent_status = sa.Column(
+        sa.Enum(
             "Available",
             "Rented"),
         default="Available")
+    book_language = sa.Column(sa.String(30), nullable=True)
 
     def __init__(self, *args, **kwargs):
         """Instantiates new book instances"""
-        if kwargs:
-            for key, value in kwargs.items():
-                setattr(self, key, value)
+        self.book_id = None
+        super().__init__(*args, **kwargs)
 
     def issue_book_to(self, member_id: int, librarian_id: int, duration: int):
         """Issues book to given member_id authorized by the librarian"""

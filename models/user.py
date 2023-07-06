@@ -3,7 +3,6 @@
 """ Module for User Class Definition """
 
 from models.base_model import BaseModel, sa
-from sqlalchemy import Column, String, ForeignKey, Integer, Identity
 from sqlalchemy.orm import validates
 import re
 
@@ -11,19 +10,13 @@ import re
 class User(BaseModel):
     """User object"""
     __tablename__ = "users"
-    user_id = Column(Integer,
-                     Identity(
-                         always=True,
-                         start=1,
-                         increment=1,
-                         nomaxvalue=True),
-                     primary_key=True)
-    first_name = Column(String(60))
-    last_name = Column(String(60))
-    email = Column(String(60), nullable=False, unique=True)
-    password = Column(String(60), nullable=False)
-    account_id = Column(Integer,
-                        ForeignKey('accounts.account_id', onupdate='cascade', ondelete='cascade'))
+    user_id = sa.Column(sa.Integer, primary_key=True)
+    first_name = sa.Column(sa.String(60))
+    last_name = sa.Column(sa.String(60))
+    email = sa.Column(sa.String(60), nullable=False, unique=True)
+    password = sa.Column(sa.String(60), nullable=False)
+    account_id = sa.Column(sa.Integer,
+                           sa.ForeignKey('accounts.account_id', onupdate='CASCADE', ondelete='SET NULL'))
 
     @validates('email')
     def validate_email(self, key, address):
@@ -36,9 +29,8 @@ class User(BaseModel):
 
     def __init__(self, *args, **kwargs):
         """Instantiates new user instances"""
-        if kwargs:
-            for key, value in kwargs.items():
-                setattr(self, key, value)
+        self.user_id = None
+        super().__init__(*args, **kwargs)
 
     # TODO - login
 
